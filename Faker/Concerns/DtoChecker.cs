@@ -7,9 +7,14 @@ namespace Faker.Concerns
     {
         private Type _type;
 
-        public DtoChecker(Type type) => _type = type;
+        private DtoChecker(Type type) => _type = type;
 
-        public bool IsDto()
+        public static bool IsDto(Type type)
+        {
+            return new DtoChecker(type).IsDto();
+        }
+        
+        private bool IsDto()
         {
             return HasPublicFields() || HasAccessibleProperties() ||
                    (HasReadableProperties() && HasPublicConstructorWithArguments());

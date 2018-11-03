@@ -6,7 +6,7 @@ namespace Faker
 
         public T Create<T>() where T : class
         {
-            if (!new Concerns.DtoChecker(typeof(T)).IsDto()) return null;
+            if (!Concerns.DtoChecker.IsDto(typeof(T))) return null;
             
             return null;
         }

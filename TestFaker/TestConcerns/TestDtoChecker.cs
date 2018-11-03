@@ -8,30 +8,30 @@ namespace TestFaker.TestConcerns
         [Fact]
         public void WhenTypeHasPublicFields()
         {
-            Assert.True(CheckResult(typeof(DtoClass1)));
+            Assert.True(Result(typeof(DtoClass1)));
         }
         
         [Fact]
         public void WhenTypeHasPublicProperties()
         {
-            Assert.True(CheckResult(typeof(DtoClass2)));
+            Assert.True(Result(typeof(DtoClass2)));
         }
         
         [Fact]
         public void WhenTypeHasReadablePropertiesAndPublicConstructorWithParams()
         {
-            Assert.True(CheckResult(typeof(DtoClass3)));
+            Assert.True(Result(typeof(DtoClass3)));
         }
         
         [Fact]
         public void WhenTypeIsNotDto()
         {
-            Assert.False(CheckResult(typeof(NotDtoClass)));
+            Assert.False(Result(typeof(NotDtoClass)));
         }
 
-        private static bool CheckResult(Type type)
+        private static bool Result(Type type)
         {
-            return new Faker.Concerns.DtoChecker(type).IsDto();
+            return Faker.Concerns.DtoChecker.IsDto(type);
         }
         
         private class DtoClass1
