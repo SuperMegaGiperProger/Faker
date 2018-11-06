@@ -1,4 +1,5 @@
 using System;
+using Faker.Concerns;
 using Xunit;
 
 namespace TestFaker.TestConcerns
@@ -31,7 +32,7 @@ namespace TestFaker.TestConcerns
 
         private static bool Result(Type type)
         {
-            return Faker.Concerns.DtoChecker.IsDto(type);
+            return type.IsDto();
         }
         
         private class DtoClass1
