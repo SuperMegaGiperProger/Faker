@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Faker.Concerns
@@ -7,13 +8,21 @@ namespace Faker.Concerns
     {
         public static bool IsDto(this Type type)
         {
-            return type.HasPublicFields() || type.HasAccessibleProperties() ||
-                   (type.HasReadableProperties() && type.HasPublicConstructorWithArguments());
+            return !type.IsPrimitive && (
+                       type.HasPublicFields() ||
+                       type.HasAccessibleProperties() ||
+                       (type.HasReadableProperties() && type.HasPublicConstructorWithArguments())
+                   );
         }
 
         public static bool HasPublicFields(this Type type)
         {
-            return type.GetFields(BindingFlags.Public | BindingFlags.Instance).Length > 0;
+            return type.PublicFields().Length > 0;
+        }
+
+        public static FieldInfo[] PublicFields(this Type type)
+        {
+            return type.GetFields(BindingFlags.Public | BindingFlags.Instance);
         }
 
         public static bool HasAccessibleProperties(this Type type)
@@ -27,6 +36,11 @@ namespace Faker.Concerns
         public static bool HasReadableProperties(this Type type)
         {
             return Array.Exists(type.PublicProperties(), property => property.CanRead);
+        }
+
+        public static PropertyInfo[] WritableProperties(this Type type)
+        {
+            return type.PublicProperties().Where(prop => prop.CanWrite).ToArray();
         }
 
         public static PropertyInfo[] PublicProperties(this Type type)

@@ -18,7 +18,7 @@ namespace Faker
         {
             if (!typeof(T).IsDto()) return null;
 
-            return null;
+            return (T) new DtoInitializer(typeof(T), _generatorsBuilder).Create();
         }
     }
 }
