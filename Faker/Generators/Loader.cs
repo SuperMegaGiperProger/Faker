@@ -39,13 +39,14 @@ namespace Faker.Generators
 
         private string[] GetDllFilePaths()
         {
-            return Directory.Exists(_path) ? Directory.GetFiles(_path, "*.dll") : new string[] { };
+            var absolutePath = Path.GetFullPath(_path);
+            return Directory.Exists(absolutePath) ? Directory.GetFiles(absolutePath, "*.dll") : new string[] { };
         }
 
         private IEnumerable<Assembly> GetAssemblies()
         {
             var dllFilePaths = GetDllFilePaths();
-
+            
             ICollection<Assembly> assemblies = new List<Assembly>(dllFilePaths.Length);
             foreach (var dllFilePath in dllFilePaths)
             {
