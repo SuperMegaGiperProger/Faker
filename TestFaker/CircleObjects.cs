@@ -5,7 +5,8 @@ namespace TestFaker
     class ClassA
     {
         public string Str;
-        public ClassB B;
+        public ClassB B1;
+        public ClassB B2;
     }
 
     class ClassB
@@ -21,14 +22,18 @@ namespace TestFaker
         {
             var obj = Concerns.TestHelpers.GetFaker().Create<ClassA>();
             
-            Assert.NotNull(obj.B);
-            Assert.Null(obj.B.A);
+            Assert.NotNull(obj.B1);
+            Assert.NotNull(obj.B2);
+            Assert.Null(obj.B1.A);
+            Assert.Null(obj.B2.A);
             
             Assert.NotNull(obj.Str);
-            Assert.NotNull(obj.B.Str);
+            Assert.NotNull(obj.B1.Str);
+            Assert.NotNull(obj.B2.Str);
             
             Assert.IsType<ClassA>(obj);
-            Assert.IsType<ClassB>(obj.B);
+            Assert.IsType<ClassB>(obj.B1);
+            Assert.IsType<ClassB>(obj.B2);
         }
     }
 }

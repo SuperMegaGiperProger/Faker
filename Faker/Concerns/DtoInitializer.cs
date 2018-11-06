@@ -7,27 +7,37 @@ namespace Faker.Concerns
 {
     public class DtoInitializer
     {
+        private Type _type;
         private DtoInitController _controller;
         private Generators.Builder _generatorBuilder;
         private ISet<Type> _previousTypes;
 
         public DtoInitializer(Type type, Generators.Builder generatorBuilder, ISet<Type> previousTypes = null)
         {
+            _type = type;
             _previousTypes = previousTypes ?? new HashSet<Type>();
-            _previousTypes.Add(type);
-
             _generatorBuilder = generatorBuilder;
             _controller = new DtoInitController(type);
         }
 
         public object Create()
         {
+            _previousTypes.Add(_type);
+
+            var obj = InitializeObject();
+            
+            _previousTypes.Remove(_type);
+
+            return obj;
+        }
+
+        private object InitializeObject()
+        {
             var constructor = _controller.Constructor();
 
             if (constructor == null) return null;
-
-            var param = GetConstructorParameterValues(constructor);
-            var obj = constructor.Invoke(param);
+            
+            var obj = constructor.Invoke(GetConstructorParameterValues(constructor));
 
             if (_controller.ToFillFields())
             {
