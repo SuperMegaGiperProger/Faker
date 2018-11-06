@@ -1,4 +1,3 @@
-using System.Reflection;
 using Xunit;
 
 namespace TestFaker
@@ -19,8 +18,7 @@ namespace TestFaker
             var result = Concerns.TestHelpers.GetFaker().Create<TestObjects.FlatDtoClassWithoutConstructor>();
 
             Assert.IsType<TestObjects.FlatDtoClassWithoutConstructor>(result);
-            Concerns.TestHelpers.AssertPublicFieldsNotEmpty(result);
-            Concerns.TestHelpers.AssertPublicPropertiesNotEmpty(result);
+            Concerns.TestHelpers.AssertValuesFilled(result);
         }
     }
 }

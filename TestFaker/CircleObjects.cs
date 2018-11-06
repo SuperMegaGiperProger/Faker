@@ -1,18 +1,19 @@
+using TestFaker.TestObjects;
 using Xunit;
 
 namespace TestFaker
 {
-    class ClassA
+    class ClassA : FlatDtoClassWithoutConstructor
     {
-        public string Str;
         public ClassB B1;
         public ClassB B2;
+        public ClassB B3 { set; get; }
     }
 
-    class ClassB
+    class ClassB : FlatDtoClassWithoutConstructor
     {
-        public string Str;
-        public ClassA A;
+        public ClassA A1;
+        public ClassA A2 { set; get; }
     }
     
     public class CircleObjects
@@ -21,19 +22,25 @@ namespace TestFaker
         public void InitializeCycleFieldsWithNull()
         {
             var obj = Concerns.TestHelpers.GetFaker().Create<ClassA>();
+ 
+            Concerns.TestHelpers.AssertValuesFilled(obj);
             
-            Assert.NotNull(obj.B1);
-            Assert.NotNull(obj.B2);
-            Assert.Null(obj.B1.A);
-            Assert.Null(obj.B2.A);
+            Concerns.TestHelpers.AssertValuesFilled(obj.B1, new []{"A1", "A2"});
+            Concerns.TestHelpers.AssertValuesFilled(obj.B2, new []{"A1", "A2"});
+            Concerns.TestHelpers.AssertValuesFilled(obj.B3, new []{"A1", "A2"});
+                                   
+            Assert.Null(obj.B1.A1);
+            Assert.Null(obj.B2.A1);
+            Assert.Null(obj.B3.A1);
             
-            Assert.NotNull(obj.Str);
-            Assert.NotNull(obj.B1.Str);
-            Assert.NotNull(obj.B2.Str);
-            
+            Assert.Null(obj.B1.A2);
+            Assert.Null(obj.B2.A2);
+            Assert.Null(obj.B3.A2);
+
             Assert.IsType<ClassA>(obj);
             Assert.IsType<ClassB>(obj.B1);
             Assert.IsType<ClassB>(obj.B2);
+            Assert.IsType<ClassB>(obj.B3);
         }
     }
 }

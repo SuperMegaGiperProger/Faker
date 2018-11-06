@@ -3,9 +3,8 @@ using Xunit;
 
 namespace TestFaker
 {
-    class NestedDtoClassWithoutConstructor
+    class NestedDtoClassWithoutConstructor : FlatDtoClassWithoutConstructor
     {
-        public string StringField;
         public FlatDtoClassWithoutConstructor NestedObject;
     }
     
@@ -17,12 +16,10 @@ namespace TestFaker
             var result = Concerns.TestHelpers.GetFaker().Create<NestedDtoClassWithoutConstructor>();
             
             Assert.IsType<NestedDtoClassWithoutConstructor>(result);
-            Concerns.TestHelpers.AssertPublicFieldsNotEmpty(result);
-            Concerns.TestHelpers.AssertPublicPropertiesNotEmpty(result);
+            Concerns.TestHelpers.AssertValuesFilled(result);
             
-            Assert.IsType<TestObjects.FlatDtoClassWithoutConstructor>(result.NestedObject);
-            Concerns.TestHelpers.AssertPublicFieldsNotEmpty(result.NestedObject);
-            Concerns.TestHelpers.AssertPublicPropertiesNotEmpty(result.NestedObject);
+            Assert.IsType<FlatDtoClassWithoutConstructor>(result.NestedObject);
+            Concerns.TestHelpers.AssertValuesFilled(result.NestedObject);
         }
     }
 }

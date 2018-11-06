@@ -7,9 +7,16 @@ namespace GeneratorPlugins
     {
         public override Type GeneratedType => typeof(long);
 
-        protected override object GenerateValue()
+        private const double MIN_MODULE = 0.000001;
+        
+        protected override object GenerateBeforeDefaultValue()
         {
-            return (_random.NextDouble() * 2.0 - 1.0) * long.MaxValue;
+            return (long) ((_random.NextDouble() + MIN_MODULE) * long.MinValue);
+        }
+        
+        protected override object GenerateAfterDefaultValue()
+        {
+            return (long) ((_random.NextDouble() + MIN_MODULE) * long.MaxValue);
         }
     }
 }

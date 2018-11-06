@@ -2,13 +2,13 @@ using System;
 
 namespace Faker.Generators.Default
 {
-    public class Bool : PrimitiveGenerator
+    public class Bool : IGenerator
     {
-        public override Type GeneratedType => typeof(bool);
+        public Type GeneratedType => typeof(bool);
 
-        protected override object GenerateValue()
+        public object Generate()
         {
-            return _random.NextDouble() >= 0.5;
+            return true;
         }
     }
 }

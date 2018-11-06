@@ -2,24 +2,20 @@ using Xunit;
 
 namespace TestFaker
 {
+    class ClassWithPluginFields
+    {
+        public float A;
+        public long B { get; set; }
+    }
+    
     public class Plugins
     {
         [Fact]
-        public void TestPresenceOfFloatPlugin()
+        public void FillsValues()
         {
-            var builder = new Faker.Generators.Builder(new[] {"../../../../Plugins"});
-            var generator = builder.Get(typeof(float));
+            var obj = Concerns.TestHelpers.GetFaker().Create<ClassWithPluginFields>();
             
-            Assert.Equal(typeof(float), generator.GeneratedType);
-        }
-        
-        [Fact]
-        public void TestPresenceOfLongPlugin()
-        {
-            var builder = new Faker.Generators.Builder(new[] {"../../../../Plugins"});
-            var generator = builder.Get(typeof(long));
-            
-            Assert.Equal(typeof(long), generator.GeneratedType);
+            Concerns.TestHelpers.AssertValuesFilled(obj);
         }
     }
 }

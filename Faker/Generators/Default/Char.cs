@@ -8,7 +8,7 @@ namespace Faker.Generators.Default
 
         protected override object GenerateValue()
         {
-            return _random.Next(char.MinValue, char.MaxValue);
+            return (char) _random.Next(1, char.MaxValue);
         }
     }
 }
