@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using Xunit;
@@ -51,12 +52,14 @@ namespace TestFaker.Concerns
 
             foreach (var property in properties)
             {
-                var type = property.PropertyType;
+                if (!property.CanWrite || !property.CanRead) continue;
                 
-                if (type.IsPrimitive && property.CanWrite && property.CanRead)
-                {
-                    Assert.NotEqual(Activator.CreateInstance(type), property.GetValue(result));
-                }
+                var type = property.PropertyType;
+                var value = property.GetValue(result);
+                
+                if (type.IsPrimitive) Assert.NotEqual(DefaultValue(type), value);
+                
+                if (typeof(ICollection).IsAssignableFrom(type)) AssertCollectionFilled(value as ICollection);
             }
         }
 
@@ -67,8 +70,11 @@ namespace TestFaker.Concerns
             foreach (var field in fields)
             {
                 var type = field.FieldType;
+                var value = field.GetValue(result);
                 
-                if (type.IsPrimitive) Assert.NotEqual(Activator.CreateInstance(type), field.GetValue(result));
+                if (type.IsPrimitive) Assert.NotEqual(DefaultValue(type), value);
+                
+                if (typeof(ICollection).IsAssignableFrom(type)) AssertCollectionFilled(value as ICollection);
             }
         }
 
@@ -84,6 +90,23 @@ namespace TestFaker.Concerns
             var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Instance);
             
             if (fields.Length > 0) Assert.Contains(fields, field => field.GetValue(obj) != null);
+        }
+
+        public static void AssertCollectionFilled(ICollection collection)
+        {
+            Assert.True(collection.Count > 0);
+            
+            foreach (var item in collection)
+            {
+                var type = item.GetType();
+                
+                if (type.IsPrimitive) Assert.NotEqual(DefaultValue(type), item);
+            }
+        }
+
+        public static object DefaultValue(Type type)
+        {
+            return type.IsPrimitive ? Activator.CreateInstance(type) : null;
         }
     }
 }

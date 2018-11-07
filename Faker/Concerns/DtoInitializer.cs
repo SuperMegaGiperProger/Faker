@@ -25,7 +25,7 @@ namespace Faker.Concerns
             _previousTypes.Add(_type);
 
             var obj = InitializeObject();
-            
+
             _previousTypes.Remove(_type);
 
             return obj;
@@ -36,7 +36,7 @@ namespace Faker.Concerns
             var constructor = _controller.Constructor();
 
             if (constructor == null) return null;
-            
+
             var obj = constructor.Invoke(GetConstructorParameterValues(constructor));
 
             if (_controller.ToFillFields())
@@ -88,7 +88,9 @@ namespace Faker.Concerns
 
         private object GenerateValue(Type type)
         {
-            var value = _generatorBuilder.Get(type).Generate();
+            var value = type.IsCollection()
+                ? _generatorBuilder.Get(type.GetGenericTypeDefinition()).GenerateCollection(type)
+                : _generatorBuilder.Get(type).Generate();
 
             if (value == null && type.IsDto() && !_previousTypes.Contains(type))
             {

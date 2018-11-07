@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 
@@ -56,6 +57,11 @@ namespace Faker.Concerns
         public static ConstructorInfo[] PublicConstructors(this Type type)
         {
             return type.GetConstructors(BindingFlags.Public | BindingFlags.Instance);
+        }
+
+        public static bool IsCollection(this Type type)
+        {
+            return typeof(ICollection).IsAssignableFrom(type);
         }
     }
 }

@@ -1,12 +1,12 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Faker.Generators.Default
 {
     public class ListGen : ICollectionGenerator
     {
-        public Type GeneratedType => typeof(List<object>);
-        public Type GetGeneratedType<T>() => typeof(List<T>);
+        public Type GeneratedType => typeof(List<>);
 
         private Generators.Builder _generatorsBuilder;
         private Random _random;
@@ -22,16 +22,17 @@ namespace Faker.Generators.Default
         
         public object Generate() => new List<object>();
 
-        public object Generate<T>()
+        public ICollection Generate(Type type)
         {
             var length = _random.Next(MIN_LENGTH, MAX_LENGTH);
-            var generator = _generatorsBuilder.Get(typeof(T));
+            var generator = _generatorsBuilder.Get(type);
+            var listType = GeneratedType.MakeGenericType(type);
 
-            var result = new List<T>();
-
+            var result = (IList) Activator.CreateInstance(listType);
+            
             for (var i = 0; i < length; ++i)
             {
-                result.Add((T) generator.Generate());
+                result.Add(generator.Generate());
             }
             
             return result;

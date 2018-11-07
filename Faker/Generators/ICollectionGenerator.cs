@@ -1,10 +1,10 @@
 using System;
+using System.Collections;
 
 namespace Faker.Generators
 {
     public interface ICollectionGenerator : IGenerator
     {
-        Type GetGeneratedType<T>();
-        object Generate<T>();
+        ICollection Generate(Type type);
     }
 }
